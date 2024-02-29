@@ -40,7 +40,7 @@ class proper_test extends advanced_testcase {
      * Test returning metadata.
      * @covers \tool_proper\privacy\provider
      */
-    public function test_get_metadata() {
+    public function test_get_metadata(): void {
         $collection = new \core_privacy\local\metadata\collection('tool_proper');
         $reason = privacy\provider::get_reason($collection);
         $this->assertEquals($reason, 'privacy:metadata');
@@ -114,7 +114,7 @@ class proper_test extends advanced_testcase {
      * Test replace.
      * @covers \tool_proper\replace
      */
-    public function test_replace() {
+    public function test_replace(): void {
         $this->resetaftertest();
         $gen = $this->getDataGenerator();
         $user1 = $gen->create_user(['firstname' => 'aAaAaA']);
@@ -139,7 +139,6 @@ class proper_test extends advanced_testcase {
         $this->assertEquals($user->city, 'CCCCCC');
     }
 
-
     /**
      * Test dataprovider.
      * @dataProvider replace_provider
@@ -149,7 +148,7 @@ class proper_test extends advanced_testcase {
      * @param string $after3
      * @covers \tool_proper\replace
      */
-    public function test_dataprov(string $before, string $after1, string $after2, string $after3) {
+    public function test_dataprov(string $before, string $after1, string $after2, string $after3): void {
         $this->resetaftertest();
         $arr = \tool_proper\replace::implemented();
         $gen = $this->getDataGenerator();
