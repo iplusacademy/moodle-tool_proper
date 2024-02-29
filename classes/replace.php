@@ -115,6 +115,6 @@ class replace {
      */
     public static function implemented(): array {
         $names = \core_user\fields::get_name_fields(true);
-        return array_merge($names, ['city', 'idnumber', 'institution', 'department', 'address']);
+        return array_merge($names, ['email', 'city', 'idnumber', 'institution', 'department', 'address']);
     }
 }

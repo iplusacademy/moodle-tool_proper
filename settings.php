@@ -32,7 +32,12 @@ if ($hassiteconfig) {
     $temp->add(new admin_setting_heading('proper_handled', $s->handled, '', ''));
     $arr = \tool_proper\replace::implemented();
     foreach ($arr as $value) {
-        $temp->add(new admin_setting_configselect('proper_' . $value, get_string($value), '', 0, $options));
+        if ($value == 'email') {
+            $limited = [0 => get_string('disabled', 'admin'), 2 => $s->lower];
+            $temp->add(new admin_setting_configselect('proper_' . $value, get_string($value), '', 0, $limited));
+        } else {
+            $temp->add(new admin_setting_configselect('proper_' . $value, get_string($value), '', 0, $options));
+        }
     }
     $ADMIN->add('accounts', $temp);
 }
