@@ -73,7 +73,8 @@ class replace {
      * @return bool
      */
     private static function dowork(string $field, int $id): bool {
-        $enabled = get_config('tool_proper', 'proper_' . $field);
+        global $DB;
+        $enabled = (int)$DB->get_field('config', 'value', ['name' => 'proper_' . $field]);
         if ($enabled == 0 || $id == 1) {
             return true;
         }

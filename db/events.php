@@ -25,9 +25,4 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$observers = [
-    ['eventname' => '\core\event\user_created',
-     'callback' => '\tool_proper\observer::usercreated',
-     'priority' => 100,
-     'internal' => false, ],
-];
+$observers = [['eventname' => '\core\event\user_created', 'callback' => 'tool_proper\observer::usercreated']];

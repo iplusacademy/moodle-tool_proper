@@ -71,10 +71,11 @@ class proper_test extends advanced_testcase {
         $class->execute();
         $user = \core_user::get_user($userid);
         $this->assertEquals($user->firstname, 'aAaAaA');
-        set_config('proper_firstname', 1, 'tool_proper');
-        $userid = $generator->create_user(['firstname' => 'aAaAaA'])->id;
+        set_config('proper_firstname', 1);
         $class->set_custom_data(['userid' => $userid]);
         $class->execute();
+        get_config('tool_proper', 'proper_firstname');
+        \phpunit_util::run_all_adhoc_tasks();
         $user = \core_user::get_user($userid);
         $this->assertEquals($user->firstname, 'Aaaaaa');
     }
@@ -111,6 +112,27 @@ class proper_test extends advanced_testcase {
     }
 
     /**
+     * Test the observer2.
+     * @covers \tool_proper\observer
+     * @covers \tool_proper\user_created
+     */
+    public function test_observer_nosink(): void {
+        global $DB;
+        $this->resetaftertest();
+        $generator = $this->getDataGenerator();
+        set_config('proper_firstname', 1);
+        set_config('proper_lastname', 1);
+        set_config('proper_email', 2);
+        $this->assertCount(0, $DB->get_records('task_adhoc', ['component' => 'tool_proper']));
+        $userid = $generator->create_user(['firstname' => 'AAAAA AAAA', 'lastname' => 'BBB BBB'])->id;
+        $this->assertCount(1, $DB->get_records('task_adhoc', ['component' => 'tool_proper']));
+        \phpunit_util::run_all_adhoc_tasks();
+        $user = \core_user::get_user($userid);
+        $this->assertEquals($user->firstname, 'Aaaaa Aaaa');
+        $this->assertEquals($user->lastname, 'Bbb Bbb');
+    }
+
+    /**
      * Test replace.
      * @covers \tool_proper\replace
      */
@@ -123,15 +145,15 @@ class proper_test extends advanced_testcase {
         \tool_proper\replace::doone($user1->id);
         $user = \core_user::get_user($user1->id);
         $this->assertEquals($user->firstname, 'aAaAaA');
-        set_config('proper_firstname', 1, 'tool_proper');
+        set_config('proper_firstname', 1);
         \tool_proper\replace::doone($user1->id);
         $user = \core_user::get_user($user1->id);
         $this->assertEquals($user->firstname, 'Aaaaaa');
         \tool_proper\replace::doall();
         $user = \core_user::get_user($user2->id);
         $this->assertEquals($user->lastname, 'BbBbBb ');
-        set_config('proper_lastname', 2, 'tool_proper');
-        set_config('proper_city', 3, 'tool_proper');
+        set_config('proper_lastname', 2);
+        set_config('proper_city', 3);
         \tool_proper\replace::doall();
         $user = \core_user::get_user($user2->id);
         $this->assertEquals($user->lastname, 'bbbbbb');
@@ -157,15 +179,15 @@ class proper_test extends advanced_testcase {
             \tool_proper\replace::doone($userid);
             $newuser = \core_user::get_user($userid);
             $this->assertEquals($newuser->{$value}, $before);
-            set_config('proper_' . $value, 1, 'tool_proper');
+            set_config('proper_' . $value, 1);
             \tool_proper\replace::doone($userid);
             $newuser = \core_user::get_user($userid);
             $this->assertEquals($newuser->{$value}, $after1);
-            set_config('proper_' . $value, 2, 'tool_proper');
+            set_config('proper_' . $value, 2);
             \tool_proper\replace::doone($userid);
             $newuser = \core_user::get_user($userid);
             $this->assertEquals($newuser->{$value}, $after2);
-            set_config('proper_' . $value, 3, 'tool_proper');
+            set_config('proper_' . $value, 3);
             \tool_proper\replace::doone($userid);
             $newuser = \core_user::get_user($userid);
             $this->assertEquals($newuser->{$value}, $after3);
