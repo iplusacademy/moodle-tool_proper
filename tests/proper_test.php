@@ -125,17 +125,12 @@ class proper_test extends advanced_testcase {
         set_config('proper_email', 2);
         $this->assertCount(0, $DB->get_records('task_adhoc', ['component' => 'tool_proper']));
         $userid = $generator->create_user(['firstname' => 'AAAAA AAAA', 'lastname' => 'BBB BBB'])->id;
+        $this->waitForSecond();
         \phpunit_util::run_all_adhoc_tasks();
         $user = \core_user::get_user($userid);
         $family = $DB->get_dbfamily();
-        // TODO: why is Postgres working?
-        if ($family == 'pgsql') {
-            $this->assertEquals($user->firstname, 'Aaaaa Aaaa');
-            $this->assertEquals($user->lastname, 'Bbb Bbb');
-        } else {
-            $this->assertNotEquals($user->firstname, 'Aaaaa Aaaa');
-            $this->assertNotEquals($user->lastname, 'Bbb Bbb');
-        }
+        $this->assertEquals($user->firstname, 'Aaaaa Aaaa');
+        $this->assertEquals($user->lastname, 'Bbb Bbb');
     }
 
     /**
