@@ -30,6 +30,6 @@ $observers = [
         'eventname' => '\core\event\user_created',
         'priority' => 10,
         'callback' => 'tool_proper\observer::usercreated',
-        'internal' => false,
+        'internal' => true,
     ],
 ];

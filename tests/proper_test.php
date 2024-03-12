@@ -126,6 +126,7 @@ final class proper_test extends advanced_testcase {
         $this->assertCount(0, $DB->get_records('task_adhoc', ['component' => 'tool_proper']));
         $userid = $generator->create_user(['firstname' => 'AAAAA AAAA', 'lastname' => 'BBB BBB'])->id;
         $this->waitForSecond();
+        $this->assertCount(1, $DB->get_records('task_adhoc', ['component' => 'tool_proper']));
         \phpunit_util::run_all_adhoc_tasks();
         $user = \core_user::get_user($userid);
         $family = $DB->get_dbfamily();
