@@ -117,7 +117,6 @@ final class proper_test extends advanced_testcase {
      * @covers \tool_proper\user_created
      */
     public function test_observer_nosink(): void {
-        global $DB;
         $this->resetaftertest();
         $generator = $this->getDataGenerator();
         set_config('proper_firstname', 1);
@@ -129,7 +128,6 @@ final class proper_test extends advanced_testcase {
         $this->assertCount(1, $DB->get_records('task_adhoc', ['component' => 'tool_proper']));
         \phpunit_util::run_all_adhoc_tasks();
         $user = \core_user::get_user($userid);
-        $family = $DB->get_dbfamily();
         $this->assertEquals($user->firstname, 'Aaaaa Aaaa');
         $this->assertEquals($user->lastname, 'Bbb Bbb');
     }
