@@ -22,10 +22,10 @@
  * @author     Renaat Debleu <info@eWallah.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$string['pluginname'] = 'Replace names with proper names';
-$string['privacy:metadata'] = 'The proper plugin does not store any personal data.';
 $string['handled'] = 'Fields handled';
 $string['lower'] = 'lower';
-$string['upper'] = 'UPPER';
+$string['pluginname'] = 'Replace names with proper names';
+$string['privacy:metadata'] = 'The proper plugin does not store any personal data.';
 $string['proper'] = 'Proper';
 $string['trim'] = 'trim';
+$string['upper'] = 'UPPER';

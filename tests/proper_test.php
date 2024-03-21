@@ -86,18 +86,17 @@ final class proper_test extends advanced_testcase {
      * @covers \tool_proper\user_created
      */
     public function test_observer_events(): void {
-        global $DB;
         $this->resetaftertest();
         $generator = $this->getDataGenerator();
         $sink = $this->redirectEvents();
         $this->assertCount(0, $sink->get_events());
         $user = $generator->create_user();
-        $this->assertCount(0, $DB->get_records('task_adhoc', ['component' => 'tool_proper']));
+        $this->assert_count(0);
         \core\event\user_created::create_from_userid($user->id)->trigger();
         $events = $sink->get_events();
         $eventdata = end($events);
         $this->assertEquals('\core\event\user_created', $eventdata->eventname);
-        $this->assertCount(0, $DB->get_records('task_adhoc', ['component' => 'tool_proper']));
+        $this->assert_count(0);
         \phpunit_util::run_all_adhoc_tasks();
         $observer = new observer();
         $event = \core\event\user_created::create_from_userid($user->id);
@@ -106,7 +105,7 @@ final class proper_test extends advanced_testcase {
         $events = $sink->get_events();
         $eventdata = end($events);
         $this->assertEquals('\core\event\user_created', $eventdata->eventname);
-        $this->assertCount(1, $DB->get_records('task_adhoc', ['component' => 'tool_proper']));
+        $this->assert_count(1);
         \phpunit_util::run_all_adhoc_tasks();
         $sink->close();
     }
@@ -117,16 +116,15 @@ final class proper_test extends advanced_testcase {
      * @covers \tool_proper\user_created
      */
     public function test_observer_nosink(): void {
-        global $DB;
         $this->resetaftertest();
         $generator = $this->getDataGenerator();
         set_config('proper_firstname', 1);
         set_config('proper_lastname', 1);
         set_config('proper_email', 2);
-        $this->assertCount(0, $DB->get_records('task_adhoc', ['component' => 'tool_proper']));
+        $this->assert_count(0);
         $userid = $generator->create_user(['firstname' => 'AAAAA AAAA', 'lastname' => 'BBB BBB'])->id;
         $this->waitForSecond();
-        $this->assertCount(1, $DB->get_records('task_adhoc', ['component' => 'tool_proper']));
+        $this->assert_count(1);
         \phpunit_util::run_all_adhoc_tasks();
         $user = \core_user::get_user($userid);
         $this->assertEquals($user->firstname, 'Aaaaa Aaaa');
@@ -209,5 +207,15 @@ final class proper_test extends advanced_testcase {
             'Uppers' => ['JANE DOE', 'Jane Doe', 'jane doe', 'JANE DOE'],
             'Correct' => ['Jane Doe', 'Jane Doe', 'jane doe', 'JANE DOE'],
         ];
+    }
+
+    /**
+     * Assert count of adhoc tasks.
+     *
+     * @param int $amount
+     */
+    private function assert_count(int $amount): void {
+        global $DB;
+        $this->assertCount($amount, $DB->get_records('task_adhoc', ['component' => 'tool_proper']));
     }
 }
