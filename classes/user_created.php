@@ -35,7 +35,6 @@ use core_user;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class user_created extends \core\task\adhoc_task {
-
     /**
      * Execute scheduled task
      *

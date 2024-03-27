@@ -25,8 +25,8 @@
 
 define('CLI_SCRIPT', true);
 
-require(__DIR__.'/../../../../config.php');
-require_once($CFG->libdir.'/clilib.php');
+require(__DIR__ . '/../../../../config.php');
+require_once($CFG->libdir . '/clilib.php');
 
 $longparams = [
     'help' => false,
@@ -40,7 +40,7 @@ $shortparams = [
     'q' => 'all',
 ];
 
-list($options, $unrecognized) = cli_get_params($longparams, $shortparams);
+[$options, $unrecognized] = cli_get_params($longparams, $shortparams);
 
 if ($unrecognized) {
     $unrecognized = implode("\n  ", $unrecognized);
@@ -88,4 +88,3 @@ if ($options['id']) {
     exit();
 }
 exit();
-

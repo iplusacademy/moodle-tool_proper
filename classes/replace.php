@@ -36,7 +36,6 @@ use core_user;
  * @author     Renaat Debleu <info@eWallah.net>
  */
 class replace {
-
     /**
      * Do all work
      * @return bool
