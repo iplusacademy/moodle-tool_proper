@@ -29,4 +29,4 @@ $plugin->component = 'tool_proper';
 $plugin->requires = 2023042400;
 $plugin->supported = [402, 404];
 $plugin->maturity = MATURITY_RC;
-$plugin->release = 'v4.2.2';
+$plugin->release = 'v4.4.1';
