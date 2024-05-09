@@ -17,9 +17,10 @@
 /**
  * Version details.
  *
- * @package    tool_proper
- * @copyright  2024 eWallah.net
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   tool_proper
+ * @copyright iplusacademy (www.iplusacademy.org)
+ * @author    Renaat Debleu <info@eWallah.net>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();

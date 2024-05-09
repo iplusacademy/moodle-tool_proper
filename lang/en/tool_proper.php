@@ -18,7 +18,7 @@
  * Strings for component 'tool_proper'
  *
  * @package    tool_proper
- * @copyright  2024 iplusacademy
+ * @copyright  iplusacademy (www.iplusacademy.org)
  * @author     Renaat Debleu <info@eWallah.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
