@@ -63,16 +63,16 @@ final class proper_test extends advanced_testcase {
         $this->resetaftertest();
         $class = new user_created();
         $class->set_custom_data(['userid' => 9999]);
-        $class->execute();
+        $this->assertTrue($class->execute());
         $generator = $this->getDataGenerator();
         $userid = $generator->create_user(['firstname' => 'aAaAaA'])->id;
         $class->set_custom_data(['userid' => $userid]);
-        $class->execute();
+        $this->assertTrue($class->execute());
         $user = \core_user::get_user($userid);
         $this->assertEquals($user->firstname, 'aAaAaA');
         set_config('proper_firstname', 1);
         $class->set_custom_data(['userid' => $userid]);
-        $class->execute();
+        $this->assertTrue($class->execute());
         get_config('tool_proper', 'proper_firstname');
         \phpunit_util::run_all_adhoc_tasks();
         $user = \core_user::get_user($userid);
@@ -140,7 +140,10 @@ final class proper_test extends advanced_testcase {
         $user1 = $gen->create_user(['firstname' => 'aAaAaA']);
         $user2 = $gen->create_user(['lastname' => 'BbBbBb ']);
         $user3 = $gen->create_user(['city' => 'cCCCCC']);
-        \tool_proper\replace::doone($user1->id);
+        $this->assertTrue(\tool_proper\replace::doone(0));
+        $this->assertTrue(\tool_proper\replace::doone(1));
+        $this->assertTrue(\tool_proper\replace::doone(2));
+        $this->assertTrue(\tool_proper\replace::doone($user1->id));
         $user = \core_user::get_user($user1->id);
         $this->assertEquals($user->firstname, 'aAaAaA');
         set_config('proper_firstname', 1);
@@ -171,6 +174,22 @@ final class proper_test extends advanced_testcase {
     public function test_dataprov(string $before, string $after1, string $after2, string $after3): void {
         $this->resetaftertest();
         $arr = \tool_proper\replace::implemented();
+        $this->assertEquals($arr,
+            [
+                'firstname',
+                'lastname',
+                'firstnamephonetic',
+                'lastnamephonetic',
+                'middlename',
+                'alternatename',
+                'email',
+                'city',
+                'idnumber',
+                'institution',
+                'department',
+                'address',
+            ]
+        );
         $gen = $this->getDataGenerator();
         foreach ($arr as $value) {
             $userid = $gen->create_user([$value => $before])->id;

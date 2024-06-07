@@ -42,11 +42,11 @@ class replace {
      */
     public static function doall(): bool {
         global $DB;
-        $ids = $DB->get_fieldset_select('user', 'id', 'confirmed = 1 AND deleted = 0', []);
+        $userids = $DB->get_fieldset_select('user', 'id', 'confirmed = 1 AND deleted = 0', []);
         $return = true;
-        foreach ($ids as $id) {
+        foreach ($userids as $userid) {
             foreach (self::implemented() as $field) {
-                $return = $return && self::dowork($field, $id);
+                $return = $return && self::dowork($field, $userid);
             }
         }
         return $return;
@@ -54,13 +54,13 @@ class replace {
 
     /**
      * Do one
-     * @param int $id
+     * @param int $userid
      * @return bool
      */
-    public static function doone(int $id): bool {
+    public static function doone(int $userid): bool {
         $return = true;
         foreach (self::implemented() as $field) {
-            $return = $return && self::dowork($field, $id);
+            $return = $return && self::dowork($field, $userid);
         }
         return $return;
     }
@@ -68,16 +68,19 @@ class replace {
     /**
      * Do work
      * @param string $field
-     * @param int $id
+     * @param int $userid
      * @return bool
      */
-    private static function dowork(string $field, int $id): bool {
+    private static function dowork(string $field, int $userid): bool {
         global $DB;
-        $enabled = (int)$DB->get_field('config', 'value', ['name' => 'proper_' . $field]);
-        if ($enabled == 0 || $id == 1) {
+        if ($userid < 2) {
             return true;
         }
-        return self::doreplace($field, $id, $enabled);
+        $enabled = $DB->get_field('config', 'value', ['name' => 'proper_' . $field]);
+        if ($enabled == 0) {
+            return true;
+        }
+        return self::doreplace($field, $userid, $enabled);
     }
 
     /**
@@ -87,7 +90,7 @@ class replace {
      * @param int $enabled
      * @return bool
      */
-    public static function doreplace(string $field, int $id, int $enabled): bool {
+    private static function doreplace(string $field, int $id, int $enabled): bool {
         global $DB;
         $value = $DB->get_field('user', $field, ['id' => $id]);
         $newvalue = $value;

@@ -43,7 +43,7 @@ class user_created extends \core\task\adhoc_task {
     public function execute() {
         $data = $this->get_custom_data();
         if ($newuser = core_user::get_user($data->userid)) {
-            return replace::doone($newuser->id);
+            replace::doone($newuser->id);
         }
         return true;
     }

@@ -43,7 +43,6 @@ class observer {
         if (!empty($user)) {
             $adhock = new \tool_proper\user_created();
             $adhock->set_custom_data(['userid' => $user->objectid]);
-            $adhock->set_component('tool_proper');
             \core\task\manager::queue_adhoc_task($adhock);
         }
     }
