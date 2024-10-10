@@ -29,11 +29,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['8.1']
-        moodle-branch: ['MOODLE_402_STABLE', 'MOODLE_403_STABLE', 'MOODLE_404_STABLE', 'main']
+        php: ['8.2']
+        moodle-branch: ['MOODLE_404_STABLE', 'MOODLE_405', 'main']
         database: ['mariadb', 'pgsql']
         include:
-          - php: '8.2'
+          - php: '8.3'
             moodle-branch: 'MOODLE_403_STABLE'
             database: 'pgsql'
 
@@ -116,6 +116,20 @@ jobs:
         run: moodle-plugin-ci coveralls-upload
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: firefox
+        id: behat
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci --ansi behat
+
+      - name: faildump
+        if: ${{ failure() && steps.behat.outcome == 'failure' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefox faildump (${{ join(matrix.*, ', ') }})
+          path: ${{ github.workspace }}/moodledata/behat_dump
+          retention-days: 7
+          if-no-files-found: ignore
 
       - name: behat
         if: ${{ !cancelled() }}
