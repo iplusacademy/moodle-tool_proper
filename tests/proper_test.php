@@ -37,7 +37,7 @@ use advanced_testcase;
 final class proper_test extends advanced_testcase {
     /**
      * Test returning metadata.
-     * #[CoversClass(tool_proper\privacy\provider)]
+     * @covers \tool_proper\privacy\provider
      */
     public function test_get_metadata(): void {
         $collection = new \core_privacy\local\metadata\collection('tool_proper');
@@ -47,7 +47,7 @@ final class proper_test extends advanced_testcase {
 
     /**
      * Test the observer.
-     * #[CoversClass(tool_proper\observer)]
+     * @covers \tool_proper\observer
      */
     public function test_observer(): void {
         $class = new \ReflectionClass(new observer());
@@ -57,7 +57,7 @@ final class proper_test extends advanced_testcase {
 
     /**
      * Test the usercreated class.
-     * #[CoversClass(tool_proper\user_created)]
+     * @covers \tool_proper\user_created
      */
     public function test_user_created_task(): void {
         $this->resetaftertest();
@@ -81,8 +81,8 @@ final class proper_test extends advanced_testcase {
 
     /**
      * Test the observer.
-     * #[CoversClass(tool_proper\observer)]
-     * #[CoversClass(tool_proper\user_created)]
+     * @covers \tool_proper\observer
+     * @covers \tool_proper\user_created
      */
     public function test_observer_events(): void {
         $this->resetaftertest();
@@ -111,8 +111,8 @@ final class proper_test extends advanced_testcase {
 
     /**
      * Test the observer2.
-     * #[CoversClass(tool_proper\observer)]
-     * #[CoversClass(tool_proper\user_created)]
+     * @covers \tool_proper\observer
+     * @covers \tool_proper\user_created
      */
     public function test_observer_nosink(): void {
         $this->resetaftertest();
@@ -132,7 +132,7 @@ final class proper_test extends advanced_testcase {
 
     /**
      * Test replace.
-     * #[CoversClass(tool_proper\replace)]
+     * @covers \tool_proper\replace
      */
     public function test_replace(): void {
         $this->resetaftertest();
@@ -169,7 +169,7 @@ final class proper_test extends advanced_testcase {
      * @param string $after1
      * @param string $after2
      * @param string $after3
-     * #[CoversClass(tool_proper\replace)]
+     * @covers \tool_proper\replace
      */
     public function test_dataprov(string $before, string $after1, string $after2, string $after3): void {
         $this->resetaftertest();
