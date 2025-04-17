@@ -25,6 +25,7 @@
 namespace tool_proper;
 
 use advanced_testcase;
+use PHPUnit\Framework\Attributes\{CoversClass, DataProvider};
 
 /**
  * The tool_proper test class.
@@ -34,10 +35,13 @@ use advanced_testcase;
  * @author     Renaat Debleu <info@eWallah.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[CoversClass(privacy\provider::class)]
+#[CoversClass(observer::class)]
+#[CoversClass(user_created::class)]
+#[CoversClass(replace::class)]
 final class proper_test extends advanced_testcase {
     /**
      * Test returning metadata.
-     * @covers \tool_proper\privacy\provider
      */
     public function test_get_metadata(): void {
         $collection = new \core_privacy\local\metadata\collection('tool_proper');
@@ -47,7 +51,6 @@ final class proper_test extends advanced_testcase {
 
     /**
      * Test the observer.
-     * @covers \tool_proper\observer
      */
     public function test_observer(): void {
         $class = new \ReflectionClass(new observer());
@@ -57,7 +60,6 @@ final class proper_test extends advanced_testcase {
 
     /**
      * Test the usercreated class.
-     * @covers \tool_proper\user_created
      */
     public function test_user_created_task(): void {
         $this->resetaftertest();
@@ -81,8 +83,6 @@ final class proper_test extends advanced_testcase {
 
     /**
      * Test the observer.
-     * @covers \tool_proper\observer
-     * @covers \tool_proper\user_created
      */
     public function test_observer_events(): void {
         $this->resetaftertest();
@@ -111,8 +111,6 @@ final class proper_test extends advanced_testcase {
 
     /**
      * Test the observer2.
-     * @covers \tool_proper\observer
-     * @covers \tool_proper\user_created
      */
     public function test_observer_nosink(): void {
         $this->resetaftertest();
@@ -132,7 +130,6 @@ final class proper_test extends advanced_testcase {
 
     /**
      * Test replace.
-     * @covers \tool_proper\replace
      */
     public function test_replace(): void {
         $this->resetaftertest();
@@ -169,8 +166,8 @@ final class proper_test extends advanced_testcase {
      * @param string $after1
      * @param string $after2
      * @param string $after3
-     * @covers \tool_proper\replace
      */
+    #[DataProvider('replace_provider')]
     public function test_dataprov(string $before, string $after1, string $after2, string $after3): void {
         $this->resetaftertest();
         $arr = \tool_proper\replace::implemented();
@@ -212,19 +209,17 @@ final class proper_test extends advanced_testcase {
     }
 
     /**
-     * Data provider for {@see self::test_foobar()}.
+     * Data provider replace.
      *
-     * @return array List of data sets
+     * @return Generator
      */
-    public static function replace_provider(): array {
-        return [
-            'Basic' => ['AAAAAA', 'Aaaaaa', 'aaaaaa', 'AAAAAA'],
-            'Spelling' => ['JaNE', 'Jane', 'jane', 'JANE'],
-            'Spaces' => ['Jane doe', 'Jane Doe', 'jane doe', 'JANE DOE'],
-            'Lowers' => ['jane doe', 'Jane Doe', 'jane doe', 'JANE DOE'],
-            'Uppers' => ['JANE DOE', 'Jane Doe', 'jane doe', 'JANE DOE'],
-            'Correct' => ['Jane Doe', 'Jane Doe', 'jane doe', 'JANE DOE'],
-        ];
+    public static function replace_provider(): \Generator {
+        yield 'Basic' => ['AAAAAA', 'Aaaaaa', 'aaaaaa', 'AAAAAA'];
+        yield 'Spelling' => ['JaNE', 'Jane', 'jane', 'JANE'];
+        yield 'Spaces' => ['Jane doe', 'Jane Doe', 'jane doe', 'JANE DOE'];
+        yield 'Lowers' => ['jane doe', 'Jane Doe', 'jane doe', 'JANE DOE'];
+        yield 'Uppers' => ['JANE DOE', 'Jane Doe', 'jane doe', 'JANE DOE'];
+        yield 'Correct' => ['Jane Doe', 'Jane Doe', 'jane doe', 'JANE DOE'];
     }
 
     /**
