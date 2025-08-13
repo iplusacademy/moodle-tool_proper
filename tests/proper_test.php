@@ -171,7 +171,8 @@ final class proper_test extends advanced_testcase {
     public function test_dataprov(string $before, string $after1, string $after2, string $after3): void {
         $this->resetaftertest();
         $arr = \tool_proper\replace::implemented();
-        $this->assertEquals($arr,
+        $this->assertEquals(
+            $arr,
             [
                 'firstname',
                 'lastname',
