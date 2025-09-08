@@ -7,7 +7,8 @@ With this plugin, after a new user registration, the enabled fields are automati
 ## Warnings ##
 
  - The proper admin tool does write immedately in the datatabase. Take a backup before using this plugin.
- - The proper function is not perfect, it has now idea about naming pecularities.
+ - The proper function is not perfect, it has no idea about naming pecularities.
+ - This plugin is 100% open source and has NOT been tested in Moodle Workplace, Totara, or any other proprietary software system. As long as the latter do not reward plugin developers, you can use this plugin only in 100% open source environments.
 
 ## Command line tool ##
 
@@ -18,7 +19,7 @@ From the command line, it is possible to fix:
 
 ## Admin tools ##
 
-Check the global documentation about [admin tools](https://docs.moodle.org/403/en/Admin_tools)
+Check the global documentation about [admin tools](https://docs.moodle.org/en/Admin_tools)
 
 ## Installation: ##
 
@@ -28,7 +29,7 @@ Check the global documentation about [admin tools](https://docs.moodle.org/403/e
 
 ## Requirements ##
 
-This plugin requires Moodle 4.2+
+This plugin requires Moodle 5.0+
 
 ## Theme support ##
 
@@ -56,6 +57,8 @@ We are always interested to read about your feature proposals or even get a pull
 ## Status ##
 
 [![Build Status](https://github.com/iplusacademy/moodle-tool_proper/workflows/Tests/badge.svg)](https://github.com/iplusacademy/moodle-tool_proper/actions)
+[![Coverage Status](https://coveralls.io/repos/github/iplusacademy/moodle-tool_proper/badge.svg?branch=main)](https://coveralls.io/github/iplusacademy/moodle-tool_proper?branch=main)
+
 
 ## Copyright ##
 
