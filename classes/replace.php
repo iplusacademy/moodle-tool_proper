@@ -38,49 +38,40 @@ use core_user;
 class replace {
     /**
      * Do all work
-     * @return bool
      */
-    public static function doall(): bool {
+    public static function doall(): void {
         global $DB;
         $userids = $DB->get_fieldset_select('user', 'id', 'confirmed = 1 AND deleted = 0', []);
-        $return = true;
         foreach ($userids as $userid) {
             foreach (self::implemented() as $field) {
-                $return = $return && self::dowork($field, $userid);
+                self::dowork($field, $userid);
             }
         }
-        return $return;
     }
 
     /**
      * Do one
      * @param int $userid
-     * @return bool
      */
-    public static function doone(int $userid): bool {
-        $return = true;
+    public static function doone(int $userid): void {
         foreach (self::implemented() as $field) {
-            $return = $return && self::dowork($field, $userid);
+            self::dowork($field, $userid);
         }
-        return $return;
     }
 
     /**
      * Do work
      * @param string $field
      * @param int $userid
-     * @return bool
      */
-    private static function dowork(string $field, int $userid): bool {
-        global $DB;
-        if ($userid < 2) {
-            return true;
+    private static function dowork(string $field, int $userid): void {
+        global $CFG, $DB;
+        if ($userid != $CFG->siteguest) {
+            $enabled = $DB->get_field('config', 'value', ['name' => 'proper_' . $field]);
+            if ($enabled != 0) {
+                self::doreplace($field, $userid, $enabled);
+            }
         }
-        $enabled = $DB->get_field('config', 'value', ['name' => 'proper_' . $field]);
-        if ($enabled == 0) {
-            return true;
-        }
-        return self::doreplace($field, $userid, $enabled);
     }
 
     /**
@@ -88,9 +79,8 @@ class replace {
      * @param string $field
      * @param int $id
      * @param int $enabled
-     * @return bool
      */
-    private static function doreplace(string $field, int $id, int $enabled): bool {
+    private static function doreplace(string $field, int $id, int $enabled): void {
         global $DB;
         $value = $DB->get_field('user', $field, ['id' => $id]);
         $newvalue = $value;
@@ -107,9 +97,8 @@ class replace {
                 break;
         }
         if ($value !== $newvalue) {
-            return $DB->set_field('user', $field, trim($newvalue), ['id' => $id]);
+            $DB->set_field('user', $field, trim($newvalue), ['id' => $id]);
         }
-        return true;
     }
 
     /**

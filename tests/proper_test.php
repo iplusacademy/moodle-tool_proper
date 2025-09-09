@@ -62,8 +62,15 @@ final class proper_test extends advanced_testcase {
      * Test the usercreated class.
      */
     public function test_user_created_task(): void {
+        global $CFG, $USER;
         $this->resetaftertest();
         $class = new user_created();
+        $class->set_custom_data(['userid' => $CFG->siteguest]);
+        $this->assertTrue($class->execute());
+        $this->setGuestUser();
+        $class->set_custom_data(['userid' => $USER->id]);
+        $this->assertTrue($class->execute());
+        $this->setAdminUser();
         $class->set_custom_data(['userid' => 9999]);
         $this->assertTrue($class->execute());
         $generator = $this->getDataGenerator();
@@ -129,6 +136,26 @@ final class proper_test extends advanced_testcase {
     }
 
     /**
+     * Test the observer3.
+     */
+    public function test_observer_field_deleted(): void {
+        global $DB;
+        $this->resetaftertest();
+        $dbman = $DB->get_manager();
+        $generator = $this->getDataGenerator();
+        set_config('proper_address', 1);
+        $userid = $generator->create_user(['address' => 'DDDD'])->id;
+        $table = new \xmldb_table('user');
+        $field = new \xmldb_field('address');
+        $dbman->drop_field($table, $field);
+        $class = new user_created();
+        $class->set_custom_data(['userid' => $userid]);
+        $this->expectException(\dml_read_exception::class);
+        $class->execute();
+        $this->assertDebuggingCalledCount(1);
+    }
+
+    /**
      * Test replace.
      */
     public function test_replace(): void {
@@ -137,10 +164,10 @@ final class proper_test extends advanced_testcase {
         $user1 = $gen->create_user(['firstname' => 'aAaAaA']);
         $user2 = $gen->create_user(['lastname' => 'BbBbBb ']);
         $user3 = $gen->create_user(['city' => 'cCCCCC']);
-        $this->assertTrue(\tool_proper\replace::doone(0));
-        $this->assertTrue(\tool_proper\replace::doone(1));
-        $this->assertTrue(\tool_proper\replace::doone(2));
-        $this->assertTrue(\tool_proper\replace::doone($user1->id));
+        $this->assertNull(\tool_proper\replace::doone(0));
+        $this->assertNull(\tool_proper\replace::doone(1));
+        $this->assertNull(\tool_proper\replace::doone(2));
+        $this->assertNull(\tool_proper\replace::doone($user1->id));
         $user = \core_user::get_user($user1->id);
         $this->assertEquals($user->firstname, 'aAaAaA');
         set_config('proper_firstname', 1);

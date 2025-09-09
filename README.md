@@ -58,7 +58,7 @@ We are always interested to read about your feature proposals or even get a pull
 
 [![Build Status](https://github.com/iplusacademy/moodle-tool_proper/workflows/Tests/badge.svg)](https://github.com/iplusacademy/moodle-tool_proper/actions)
 [![Coverage Status](https://coveralls.io/repos/github/iplusacademy/moodle-tool_proper/badge.svg?branch=main)](https://coveralls.io/github/iplusacademy/moodle-tool_proper?branch=main)
-
+![Mutation score](https://badgen.net/badge/Mutation%20Score%20Indicator/100)
 
 ## Copyright ##
 
