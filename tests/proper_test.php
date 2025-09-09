@@ -136,26 +136,6 @@ final class proper_test extends advanced_testcase {
     }
 
     /**
-     * Test the observer3.
-     */
-    public function test_observer_field_deleted(): void {
-        global $DB;
-        $this->resetaftertest();
-        $dbman = $DB->get_manager();
-        $generator = $this->getDataGenerator();
-        set_config('proper_address', 1);
-        $userid = $generator->create_user(['address' => 'DDDD'])->id;
-        $table = new \xmldb_table('user');
-        $field = new \xmldb_field('address');
-        $dbman->drop_field($table, $field);
-        $class = new user_created();
-        $class->set_custom_data(['userid' => $userid]);
-        $this->expectException(\dml_read_exception::class);
-        $class->execute();
-        $this->assertDebuggingCalledCount(1);
-    }
-
-    /**
      * Test replace.
      */
     public function test_replace(): void {
@@ -248,6 +228,26 @@ final class proper_test extends advanced_testcase {
         yield 'Lowers' => ['jane doe', 'Jane Doe', 'jane doe', 'JANE DOE'];
         yield 'Uppers' => ['JANE DOE', 'Jane Doe', 'jane doe', 'JANE DOE'];
         yield 'Correct' => ['Jane Doe', 'Jane Doe', 'jane doe', 'JANE DOE'];
+    }
+
+    /**
+     * Test the observer3.
+     */
+    public function test_observer_field_deleted(): void {
+        global $DB;
+        $this->resetaftertest();
+        $dbman = $DB->get_manager();
+        $generator = $this->getDataGenerator();
+        set_config('proper_address', 1);
+        $userid = $generator->create_user(['address' => 'DDDD'])->id;
+        $table = new \xmldb_table('user');
+        $field = new \xmldb_field('address');
+        $dbman->drop_field($table, $field);
+        $class = new user_created();
+        $class->set_custom_data(['userid' => $userid]);
+        $this->expectException(\dml_read_exception::class);
+        $class->execute();
+        $this->assertDebuggingCalledCount(1);
     }
 
     /**

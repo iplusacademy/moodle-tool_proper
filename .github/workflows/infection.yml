@@ -61,5 +61,5 @@ jobs:
 
       - name: infection
         if: ${{ !cancelled() }}
-        run: infection -s --only-covered --configuration=public/admin/tool/proper/.infection.json5
+        run: infection -s --configuration=public/admin/tool/proper/.infection.json5
         working-directory: moodle
