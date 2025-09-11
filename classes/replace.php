@@ -80,7 +80,7 @@ class replace {
      * @param int $id
      * @param int $enabled
      */
-    private static function doreplace(string $field, int $id, int $enabled): void {
+    public static function doreplace(string $field, int $id, int $enabled): void {
         global $DB;
         $value = $DB->get_field('user', $field, ['id' => $id]);
         $newvalue = $value;
