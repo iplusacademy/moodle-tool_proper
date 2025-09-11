@@ -26,18 +26,19 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
-    $s = get_strings(['upper', 'lower', 'proper', 'handled', 'pluginname'], 'tool_proper');
+    $p = 'tool_proper';
+    $s = get_strings(['upper', 'lower', 'proper', 'handled', 'pluginname'], $p);
+    $disabled = get_string('disabled', 'admin');
+    $options = [0 => $disabled, 1 => $s->proper, 2 => $s->lower, 3 => $s->upper];
+    $limited = [0 => $disabled, 2 => $s->lower];
+
     $temp = new admin_settingpage('toolproper', $s->pluginname);
-    $options = [0 => get_string('disabled', 'admin'), 1 => $s->proper, 2 => $s->lower, 3 => $s->upper];
     $temp->add(new admin_setting_heading('proper_handled', $s->handled, '', ''));
     $arr = \tool_proper\replace::implemented();
     foreach ($arr as $value) {
-        if ($value == 'email') {
-            $limited = [0 => get_string('disabled', 'admin'), 2 => $s->lower];
-            $temp->add(new admin_setting_configselect('proper_' . $value, get_string($value), '', 0, $limited));
-        } else {
-            $temp->add(new admin_setting_configselect('proper_' . $value, get_string($value), '', 0, $options));
-        }
+        $sel = $p . '/' . $value;
+        $opts = ($value == 'email') ? $limited : $options;
+        $temp->add(new admin_setting_configselect($sel, get_string($value), '', 0, $opts));
     }
     $ADMIN->add('accounts', $temp);
 }

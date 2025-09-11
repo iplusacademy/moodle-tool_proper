@@ -11,9 +11,9 @@ Feature: Proper settings
 
   Scenario: See all name fields
     When I navigate to "Users > Accounts > Replace names with proper names" in site administration
-    Then I should see "proper_firstname"
-    And I should see "proper_lastname"
-    And I should see "proper_city"
+    Then I should see "tool_proper | firstname"
+    And I should see "tool_proper | lastname"
+    And I should see "tool_proper | city"
 
   Scenario: Name fields should be updated
     When the following "users" exist:

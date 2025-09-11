@@ -42,8 +42,8 @@ class replace {
     public static function doall(): void {
         global $DB;
         $userids = $DB->get_fieldset_select('user', 'id', 'confirmed = 1 AND deleted = 0', []);
-        foreach ($userids as $userid) {
-            foreach (self::implemented() as $field) {
+        foreach (self::implemented() as $field) {
+            foreach ($userids as $userid) {
                 self::dowork($field, $userid);
             }
         }
@@ -65,12 +65,9 @@ class replace {
      * @param int $userid
      */
     private static function dowork(string $field, int $userid): void {
-        global $CFG, $DB;
+        global $CFG;
         if ($userid != $CFG->siteguest) {
-            $enabled = $DB->get_field('config', 'value', ['name' => 'proper_' . $field]);
-            if ($enabled != 0) {
-                self::doreplace($field, $userid, $enabled);
-            }
+            self::doreplace($field, $userid, get_config('tool_proper', $field));
         }
     }
 
@@ -85,6 +82,8 @@ class replace {
         $value = $DB->get_field('user', $field, ['id' => $id]);
         $newvalue = $value;
         switch ($enabled) {
+            case 0:
+                break;
             case 2:
                 $newvalue = core_text::strtolower($value);
                 break;
