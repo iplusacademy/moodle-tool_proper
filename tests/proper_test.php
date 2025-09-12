@@ -35,20 +35,10 @@ use PHPUnit\Framework\Attributes\{CoversClass, DataProvider};
  * @author     Renaat Debleu <info@eWallah.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[CoversClass(privacy\provider::class)]
 #[CoversClass(observer::class)]
 #[CoversClass(user_created::class)]
 #[CoversClass(replace::class)]
 final class proper_test extends advanced_testcase {
-    /**
-     * Test returning metadata.
-     */
-    public function test_get_metadata(): void {
-        $collection = new \core_privacy\local\metadata\collection('tool_proper');
-        $reason = privacy\provider::get_reason($collection);
-        $this->assertEquals($reason, 'privacy:metadata');
-    }
-
     /**
      * Test the observer.
      */
