@@ -104,14 +104,9 @@ jobs:
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci --ansi phpunit --testdox --coverage-text --coverage-clover
 
-      - name: privacy
-        if: matrix.moodle-branch == 'main'
-        run: vendor/bin/phpunit --colors --no-coverage --testsuite tool_dataprivacy_testsuite,tool_policy_testsuite,core_privacy_testsuite
-        working-directory: moodle
-
       - name: extra
         if: matrix.moodle-branch == 'main'
-        run: vendor/bin/phpunit --colors --no-coverage --filter test_admin_output_new_settings_by_page
+        run: vendor/bin/phpunit --colors --no-coverage --filter 'test_admin|test_tool|test_event|test_observer|test_cli|test_settings|test_version|test_lib|test_privacy|tool_dataprivacy|tool_policy|core_privacy'
         working-directory: moodle
 
       - name: coveralls
