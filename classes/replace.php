@@ -27,6 +27,7 @@ namespace tool_proper;
 
 use core_text;
 use core_user;
+use core_user\fields;
 
 /**
  * Replace
@@ -79,7 +80,15 @@ class replace {
      */
     public static function doreplace(string $field, int $id, int $enabled): void {
         global $DB;
-        $value = $DB->get_field('user', $field, ['id' => $id]);
+        $profilefield = false;
+        if (strpos($field, fields::PROFILE_FIELD_PREFIX) === 0) {
+            $short = str_ireplace(fields::PROFILE_FIELD_PREFIX, '', $field);
+            $fieldid = $DB->get_field('user_info_field', 'id', ['shortname' => $short]);
+            $value = $DB->get_field('user_info_data', 'data', ['userid' => $id, 'fieldid' => $fieldid]);
+            $profilefield = true;
+        } else {
+            $value = $DB->get_field('user', $field, ['id' => $id]);
+        }
         $newvalue = $value;
         switch ($enabled) {
             case 0:
@@ -96,7 +105,11 @@ class replace {
                 break;
         }
         if ($value !== $newvalue) {
-            $DB->set_field('user', $field, trim($newvalue), ['id' => $id]);
+            if ($profilefield) {
+                $DB->set_field('user_info_data', 'data', trim($newvalue), ['userid' => $id, 'fieldid' => $fieldid]);
+            } else {
+                $DB->set_field('user', $field, trim($newvalue), ['id' => $id]);
+            }
         }
     }
 
@@ -105,7 +118,15 @@ class replace {
      * @return array
      */
     public static function implemented(): array {
+        global $CFG;
+        require_once("{$CFG->dirroot}/user/profile/lib.php");
         $names = \core_user\fields::get_name_fields(true);
+        $fields = profile_get_custom_fields();
+        foreach ($fields as $field) {
+            if (in_array($field->datatype, ['text', 'social'])) {
+                $names[] = fields::PROFILE_FIELD_PREFIX . $field->shortname;
+            }
+        }
         return array_merge($names, ['email', 'city', 'idnumber', 'institution', 'department', 'address']);
     }
 }

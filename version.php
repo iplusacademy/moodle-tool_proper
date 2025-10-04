@@ -29,5 +29,5 @@ $plugin->component = 'tool_proper';
 $plugin->maturity = MATURITY_STABLE;
 $plugin->release = 'v5.0.2';
 $plugin->version = 2025091400;
-$plugin->requires = 2024100700;
-$plugin->supported = [405, 500];
+$plugin->requires = 2025041400;
+$plugin->supported = [500, 501];

@@ -53,6 +53,7 @@ We are always interested to read about your feature proposals or even get a pull
 ## Todo ##
 
  - implement exceptions
+ - implement custom profile fields
 
 ## Status ##
 

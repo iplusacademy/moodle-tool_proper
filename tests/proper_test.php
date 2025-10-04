@@ -129,9 +129,14 @@ final class proper_test extends advanced_testcase {
      * Test replace.
      */
     public function test_replace(): void {
+        global $CFG;
+        require_once("{$CFG->dirroot}/user/profile/lib.php");
+
         $this->resetaftertest();
         $gen = $this->getDataGenerator();
+        $gen->create_custom_profile_field(['shortname' => 'custom', 'name' => 'Custom', 'datatype' => 'text']);
         $user1 = $gen->create_user(['firstname' => 'aAaAaA']);
+        profile_save_data((object)['id' => $user1->id, 'profile_field_custom' => 'GaVVccDD WAkl']);
         $user2 = $gen->create_user(['lastname' => 'BbBbBb ']);
         $user3 = $gen->create_user(['city' => 'cCCCCC']);
         $this->assertNull(\tool_proper\replace::doone(0));
@@ -141,6 +146,7 @@ final class proper_test extends advanced_testcase {
         $user = \core_user::get_user($user1->id);
         $this->assertEquals($user->firstname, 'aAaAaA');
         set_config('firstname', 1, 'tool_proper');
+        set_config('profile_field_custom', 2, 'tool_proper');
         \tool_proper\replace::doone($user1->id);
         $user = \core_user::get_user($user1->id);
         $this->assertEquals($user->firstname, 'Aaaaaa');
@@ -167,6 +173,9 @@ final class proper_test extends advanced_testcase {
     #[DataProvider('replace_provider')]
     public function test_dataprov(string $before, string $after1, string $after2, string $after3): void {
         $this->resetaftertest();
+        $gen = $this->getDataGenerator();
+        $gen->create_custom_profile_field(['shortname' => 'menu', 'name' => 'Menu', 'datatype' => 'menu']);
+        $gen->create_custom_profile_field(['shortname' => 'custom', 'name' => 'Custom', 'datatype' => 'text']);
         $arr = \tool_proper\replace::implemented();
         $this->assertEquals(
             $arr,
@@ -177,6 +186,7 @@ final class proper_test extends advanced_testcase {
                 'lastnamephonetic',
                 'middlename',
                 'alternatename',
+                'profile_field_custom',
                 'email',
                 'city',
                 'idnumber',
@@ -185,28 +195,42 @@ final class proper_test extends advanced_testcase {
                 'address',
             ]
         );
-        $gen = $this->getDataGenerator();
         foreach ($arr as $value) {
             $userid = $gen->create_user([$value => $before])->id;
             \tool_proper\replace::doone($userid);
             $newuser = \core_user::get_user($userid);
-            $this->assertEquals($newuser->{$value}, $before);
-            set_config($value, '1', 'tool_proper');
-            \tool_proper\replace::doone($userid);
-            $newuser = \core_user::get_user($userid);
-            $this->assertEquals($newuser->{$value}, $after1);
-            set_config($value, 1, 'tool_proper');
-            \tool_proper\replace::doone($userid);
-            $newuser = \core_user::get_user($userid);
-            $this->assertEquals($newuser->{$value}, $after1);
-            set_config($value, 2, 'tool_proper');
-            \tool_proper\replace::doone($userid);
-            $newuser = \core_user::get_user($userid);
-            $this->assertEquals($newuser->{$value}, $after2);
-            set_config($value, 3, 'tool_proper');
-            \tool_proper\replace::doone($userid);
-            $newuser = \core_user::get_user($userid);
-            $this->assertEquals($newuser->{$value}, $after3);
+            if (strpos($value, \core_user\fields::PROFILE_FIELD_PREFIX) != 0) {
+                $this->assertEquals($newuser->{$value}, $before);
+                set_config($value, '1', 'tool_proper');
+                \tool_proper\replace::doone($userid);
+                $newuser = \core_user::get_user($userid);
+                $this->assertEquals($newuser->{$value}, $after1);
+                set_config($value, 1, 'tool_proper');
+                \tool_proper\replace::doone($userid);
+                $newuser = \core_user::get_user($userid);
+                $this->assertEquals($newuser->{$value}, $after1);
+                set_config($value, 2, 'tool_proper');
+                \tool_proper\replace::doone($userid);
+                $newuser = \core_user::get_user($userid);
+                $this->assertEquals($newuser->{$value}, $after2);
+                set_config($value, 3, 'tool_proper');
+                \tool_proper\replace::doone($userid);
+                $newuser = \core_user::get_user($userid);
+                $this->assertEquals($newuser->{$value}, $after3);
+            } else {
+                $otherid = $gen->create_user([$value => $before])->id;
+                profile_save_data((object)['id' => $userid, 'profile_field_menu' => 'GGGG']);
+                profile_save_data((object)['id' => $userid, 'profile_field_custom' => ' GaVVccDD WAkl ']);
+                profile_save_data((object)['id' => $otherid, 'profile_field_custom' => 'GaVVccDD WAkl ']);
+                set_config('profile_field_custom', 1, 'tool_proper');
+                \tool_proper\replace::doone($userid);
+                $newuser = \core_user::get_user($userid);
+                $fields = profile_get_user_fields_with_data($userid);
+                $this->assertEquals($fields[0]->data, 'No');
+                $this->assertEquals($fields[1]->data, 'Gavvccdd Wakl');
+                $fields = profile_get_user_fields_with_data($otherid);
+                $this->assertEquals($fields[1]->data, 'GaVVccDD WAkl ');
+            }
         }
     }
 
