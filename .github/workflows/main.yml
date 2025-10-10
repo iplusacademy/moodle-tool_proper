@@ -30,7 +30,7 @@ jobs:
       fail-fast: false
       matrix:
         php: ['8.3']
-        moodle-branch: ['MOODLE_500_STABLE', 'MOODLE_501_STABLE']
+        moodle-branch: ['MOODLE_500_STABLE', 'MOODLE_501_STABLE', 'main']
         database: ['mariadb', 'pgsql']
         include:
           - php: '8.4'
@@ -105,12 +105,6 @@ jobs:
         if: matrix.moodle-branch == 'main'
         run: vendor/bin/phpunit --colors --no-coverage --filter 'test_admin|test_tool|test_event|test_observer|test_cli|test_settings|test_version|test_lib|test_privacy|tool_dataprivacy|tool_policy|core_privacy'
         working-directory: moodle
-
-      - name: coveralls
-        if: ${{ !cancelled() }}
-        run: moodle-plugin-ci coveralls-upload
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: firefox
         id: behat
