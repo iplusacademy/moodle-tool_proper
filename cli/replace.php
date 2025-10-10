@@ -37,7 +37,7 @@ $longparams = [
 $shortparams = [
     'h' => 'help',
     'i' => 'id',
-    'q' => 'all',
+    'a' => 'all',
 ];
 
 [$options, $unrecognized] = cli_get_params($longparams, $shortparams);
@@ -59,7 +59,7 @@ Options:
 
 Example:
 \$sudo -u www-data /usr/bin/php admin/tool/proper/cli/replace.php --id=33
-\$sudo -u www-data /usr/bin/php admin/tool/proper/cli/replace.php --all
+\$sudo -u www-data /usr/bin/php admin/tool/proper/cli/replace.php -a
 ";
 
     echo $help;
@@ -68,7 +68,7 @@ Example:
 if ($options['all']) {
     $ids = $DB->get_fieldset_select('user', 'id', 'confirmed = 1 AND deleted = 0', []);
     foreach (\tool_proper\replace::implemented() as $field) {
-        $enabled = $DB->get_field('config', 'value', ['name' => 'proper_' . $field]);
+        $enabled = get_config('tool_proper', 'proper_' . $field);
         if ($enabled > 0) {
             foreach ($ids as $id) {
                 \tool_proper\replace::doreplace($field, $id, $enabled);
@@ -80,10 +80,7 @@ if ($options['all']) {
 
 if ($options['id']) {
     foreach (\tool_proper\replace::implemented() as $field) {
-        $enabled = $DB->get_field('config', 'value', ['name' => 'proper_' . $field]);
-        if ($enabled > 0) {
-            \tool_proper\replace::doreplace($field, (int)$options['id'], $enabled);
-        }
+        \tool_proper\replace::doreplace($field, (int)$options['id'], get_config('tool_proper', 'proper_' . $field));
     }
     exit();
 }
