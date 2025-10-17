@@ -28,3 +28,13 @@ Feature: Proper settings
     And I press "Purge all caches"
     And I navigate to "Users > Accounts > Browse list of users" in site administration
     Then I should see "Aaaaa"
+
+  Scenario: Proper config custom profile fields
+    When the following "custom profile fields" exist:
+      | datatype | shortname | name           |
+      | text     | frog      | Favourite frog |
+    And I navigate to "Users > Accounts > Replace names with proper names" in site administration
+    Then I should see "tool_proper | firstname"
+    And I should see "tool_proper | lastname"
+    And I should see "tool_proper | city"
+    And I should see "Favourite frog"

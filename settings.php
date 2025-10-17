@@ -38,7 +38,12 @@ if ($hassiteconfig) {
     foreach ($arr as $value) {
         $sel = $p . '/' . $value;
         $opts = ($value == 'email') ? $limited : $options;
-        $temp->add(new admin_setting_configselect($sel, get_string($value), '', 0, $opts));
+        if (strpos($value, \core_user\fields::PROFILE_FIELD_PREFIX) === 0) {
+            $str = \core_user\fields::get_display_name($value);
+        } else {
+            $str = get_string($value);
+        }
+        $temp->add(new admin_setting_configselect($sel, $str, '', 0, $opts));
     }
     $ADMIN->add('accounts', $temp);
 }
