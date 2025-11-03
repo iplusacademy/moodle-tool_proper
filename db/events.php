@@ -28,6 +28,9 @@ defined('MOODLE_INTERNAL') || die();
 $observers = [
     [
         'eventname' => '\core\event\user_created',
-        'callback' => 'tool_proper\observer::usercreated',
+        'callback' => [\tool_proper\observer::class, 'usercreated'],
+        'internal' => false,
+        // Needed so PHPUnit testing can be done for badly written tests.
+        'priority' => 900,
     ],
 ];
