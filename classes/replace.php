@@ -105,11 +105,13 @@ class replace {
                 break;
         }
         if ($value !== $newvalue) {
+            $transaction = $DB->start_delegated_transaction();
             if ($profilefield) {
                 $DB->set_field('user_info_data', 'data', trim($newvalue), ['userid' => $id, 'fieldid' => $fieldid]);
             } else {
                 $DB->set_field('user', $field, trim($newvalue), ['id' => $id]);
             }
+            $transaction->allow_commit();
         }
     }
 
