@@ -118,11 +118,11 @@ final class proper_test extends advanced_testcase {
         $this->assert_count(0);
         $userid = $generator->create_user(['firstname' => 'AAAAA AAAA', 'lastname' => 'BBB BBB'])->id;
         $this->waitForSecond();
-        $this->assert_count(1);
         \phpunit_util::run_all_adhoc_tasks();
+        $this->assert_count(0);
         $user = \core_user::get_user($userid);
-        $this->assertEquals($user->firstname, 'Aaaaa Aaaa');
-        $this->assertEquals($user->lastname, 'Bbb Bbb');
+        $this->assertEquals($user->firstname, 'AAAAA AAAA');
+        $this->assertEquals($user->lastname, 'BBB BBB');
     }
 
     /**
