@@ -52,7 +52,7 @@ class replace {
 
     /**
      * Do one
-     * @param int $userid
+     * @param int $userid User id
      */
     public static function doone(int $userid): void {
         foreach (self::implemented() as $field) {
@@ -62,8 +62,8 @@ class replace {
 
     /**
      * Do work
-     * @param string $field
-     * @param int $userid
+     * @param string $field Field
+     * @param int $userid Userid
      */
     private static function dowork(string $field, int $userid): void {
         global $CFG;
@@ -74,14 +74,14 @@ class replace {
 
     /**
      * Do replace
-     * @param string $field
-     * @param int $id
-     * @param int $enabled
+     * @param string $field Field
+     * @param int $id Id
+     * @param int $enabled Enabled
      */
     public static function doreplace(string $field, int $id, int $enabled): void {
         global $DB;
         $profilefield = false;
-        if (strpos($field, fields::PROFILE_FIELD_PREFIX) === 0) {
+        if (str_starts_with($field, fields::PROFILE_FIELD_PREFIX)) {
             $short = str_ireplace(fields::PROFILE_FIELD_PREFIX, '', $field);
             $fieldid = $DB->get_field('user_info_field', 'id', ['shortname' => $short]);
             $value = $DB->get_field('user_info_data', 'data', ['userid' => $id, 'fieldid' => $fieldid]);
@@ -89,6 +89,7 @@ class replace {
         } else {
             $value = $DB->get_field('user', $field, ['id' => $id]);
         }
+
         $newvalue = $value;
         switch ($enabled) {
             case 0:
@@ -104,6 +105,7 @@ class replace {
                 $newvalue = core_text::strtotitle($newvalue);
                 break;
         }
+
         if ($value !== $newvalue) {
             $transaction = $DB->start_delegated_transaction();
             if ($profilefield) {
@@ -111,13 +113,13 @@ class replace {
             } else {
                 $DB->set_field('user', $field, trim($newvalue), ['id' => $id]);
             }
+
             $transaction->allow_commit();
         }
     }
 
     /**
      * Implemented fields
-     * @return array
      */
     public static function implemented(): array {
         global $CFG;
@@ -129,6 +131,7 @@ class replace {
                 $names[] = fields::PROFILE_FIELD_PREFIX . $field->shortname;
             }
         }
+
         return array_merge($names, ['email', 'city', 'idnumber', 'institution', 'department', 'address']);
     }
 }

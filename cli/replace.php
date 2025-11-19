@@ -65,6 +65,7 @@ Example:
     echo $help;
     exit();
 }
+
 if ($options['all']) {
     $ids = $DB->get_fieldset_select('user', 'id', 'confirmed = 1 AND deleted = 0', []);
     foreach (\tool_proper\replace::implemented() as $field) {
@@ -75,6 +76,7 @@ if ($options['all']) {
             }
         }
     }
+
     exit();
 }
 
@@ -82,6 +84,8 @@ if ($options['id']) {
     foreach (\tool_proper\replace::implemented() as $field) {
         \tool_proper\replace::doreplace($field, (int)$options['id'], get_config('tool_proper', 'proper_' . $field));
     }
+
     exit();
 }
+
 exit();

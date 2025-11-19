@@ -39,11 +39,9 @@ class observer {
      *
      * @param \core\event\user_created $user user object
      */
-    public static function usercreated(\core\event\user_created $user) {
-        if (!empty($user)) {
-            $adhock = new \tool_proper\user_created();
-            $adhock->set_custom_data(['userid' => $user->objectid]);
-            \core\task\manager::queue_adhoc_task($adhock);
-        }
+    public static function usercreated(\core\event\user_created $user): void {
+        $adhock = new \tool_proper\user_created();
+        $adhock->set_custom_data(['userid' => $user->objectid]);
+        \core\task\manager::queue_adhoc_task($adhock);
     }
 }

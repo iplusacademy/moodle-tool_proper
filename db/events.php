@@ -31,6 +31,7 @@ $observers = [
         'callback' => [\tool_proper\observer::class, 'usercreated'],
         'internal' => false,
         // Needed so PHPUnit testing can be done for badly written tests.
-        'priority' => 900,
+        // Default 100, lower numbers are executed later.
+        'priority' => 1,
     ],
 ];

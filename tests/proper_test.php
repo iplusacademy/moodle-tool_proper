@@ -138,6 +138,7 @@ final class proper_test extends advanced_testcase {
         $this->resetaftertest();
         $gen = $this->getDataGenerator();
         $gen->create_custom_profile_field(['shortname' => 'custom', 'name' => 'Custom', 'datatype' => 'text']);
+
         $user1 = $gen->create_user(['firstname' => 'aAaAaA']);
         profile_save_data((object)['id' => $user1->id, 'profile_field_custom' => 'GaVVccDD WAkl']);
         $user2 = $gen->create_user(['lastname' => 'BbBbBb ']);
@@ -168,10 +169,10 @@ final class proper_test extends advanced_testcase {
     /**
      * Test dataprovider.
      * @dataProvider replace_provider
-     * @param string $before
-     * @param string $after1
-     * @param string $after2
-     * @param string $after3
+     * @param string $before Before
+     * @param string $after1 After 1
+     * @param string $after2 After 2
+     * @param string $after3 After 3
      */
     #[DataProvider('replace_provider')]
     public function test_dataprov(string $before, string $after1, string $after2, string $after3): void {
@@ -179,6 +180,7 @@ final class proper_test extends advanced_testcase {
         $gen = $this->getDataGenerator();
         $gen->create_custom_profile_field(['shortname' => 'menu', 'name' => 'Menu', 'datatype' => 'menu']);
         $gen->create_custom_profile_field(['shortname' => 'custom', 'name' => 'Custom', 'datatype' => 'text']);
+
         $arr = \tool_proper\replace::implemented();
         $this->assertEquals(
             $arr,
@@ -202,7 +204,7 @@ final class proper_test extends advanced_testcase {
             $userid = $gen->create_user([$value => $before])->id;
             \tool_proper\replace::doone($userid);
             $newuser = \core_user::get_user($userid);
-            if (strpos($value, \core_user\fields::PROFILE_FIELD_PREFIX) != 0) {
+            if (!str_starts_with((string) $value, \core_user\fields::PROFILE_FIELD_PREFIX)) {
                 $this->assertEquals($newuser->{$value}, $before);
                 set_config($value, '1', 'tool_proper');
                 \tool_proper\replace::doone($userid);
@@ -239,8 +241,6 @@ final class proper_test extends advanced_testcase {
 
     /**
      * Data provider replace.
-     *
-     * @return Generator
      */
     public static function replace_provider(): \Generator {
         yield 'Basic' => ['AAAAAA', 'Aaaaaa', 'aaaaaa', 'AAAAAA'];
@@ -274,7 +274,7 @@ final class proper_test extends advanced_testcase {
     /**
      * Assert count of adhoc tasks.
      *
-     * @param int $amount
+     * @param int $amount Amount
      */
     private function assert_count(int $amount): void {
         global $DB;

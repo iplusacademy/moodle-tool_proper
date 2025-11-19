@@ -45,6 +45,7 @@ class user_created extends \core\task\adhoc_task {
         if ($newuser = core_user::get_user($data->userid)) {
             replace::doone($newuser->id);
         }
+
         return true;
     }
 }
