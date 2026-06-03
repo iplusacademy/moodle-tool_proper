@@ -27,10 +27,6 @@ Check the global documentation about [admin tools](https://docs.moodle.org/en/Ad
  2. Go to Site administration > Notifications to complete the plugin installation.
  3. You will be able to configure the behaviour for each text field.
 
-## Requirements ##
-
-This plugin requires Moodle 5.0+
-
 ## Theme support ##
 
 This plugin is developed and tested on Moodle Core's Boost theme and Boost child themes, including Moodle Core's Classic theme.

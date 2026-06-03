@@ -69,11 +69,9 @@ Example:
 if ($options['all']) {
     $ids = $DB->get_fieldset_select('user', 'id', 'confirmed = 1 AND deleted = 0', []);
     foreach (\tool_proper\replace::implemented() as $field) {
-        $enabled = get_config('tool_proper', 'proper_' . $field);
-        if ($enabled > 0) {
-            foreach ($ids as $id) {
-                \tool_proper\replace::doreplace($field, $id, $enabled);
-            }
+        $enabled = (int) get_config('tool_proper', $field);
+        foreach ($ids as $id) {
+            \tool_proper\replace::doreplace($field, $id, $enabled);
         }
     }
 
@@ -82,7 +80,7 @@ if ($options['all']) {
 
 if ($options['id']) {
     foreach (\tool_proper\replace::implemented() as $field) {
-        \tool_proper\replace::doreplace($field, (int)$options['id'], get_config('tool_proper', 'proper_' . $field));
+        \tool_proper\replace::doreplace($field, (int)$options['id'], (int) get_config('tool_proper', $field));
     }
 
     exit();
