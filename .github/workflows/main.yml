@@ -40,12 +40,23 @@ jobs:
         with:
           path: this-plugin
 
+      - name: composer cache
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
       - name: setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           ini-values: max_input_vars=5000,  opcache.enable_cli=1, opcache.jit = disable
-          tools: composer:v2.5
+          tools: composer:v2.6
           coverage: pcov
 
       - name: composer
